@@ -22,46 +22,14 @@ module Firebots::InternalAPI::Controllers
 
         validates_regex 'email', matches: /^.+@.+\..+$/
 
-        validates 'email',
-          with: -> { Models::Users[email: self].nil? },
-          reason: 'must be unique.'
-        validates 'username',
-          with: -> { Models::Users[username: self].nil? },
-          reason: 'must be unique.'
-
         allow_keys :valid
       end
-      input['email'] = input['email'].downcase
 
-      password = Password.pronounceable
-      input[:id] = Rubyflake.generate
-
-      send_invite_email(input['first_name'], input['email'], password, user[:first_name])
-
-      Models::Users.insert(input.merge(
-        time_created: Time.now,
-        time_updated: Time.now,
-        permissions: 'student',
-      ))
-
-      user = Models::Users[id: input[:id]]
-
-      Firebots::Password.new(user).save_password!(password)
-
-      Models::Badges.each do |badge|
-        Models::UserBadges.insert({
-          user_id: user[:id],
-          badge_id: badge[:id],
-          status: 'no',
-          id: Rubyflake.generate,
-          time_created: Time.now,
-          time_updated: Time.now,
-        })
-      end
+      new_user = Firebots::User.create(input)
 
       {
         status: 200,
-        user: sanitized_user(user),
+        user: sanitized_user(new_user)
       }
     end
 
