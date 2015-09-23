@@ -15,7 +15,7 @@ module Firebots
       id       = Rubyflake.generate
       username = args['first_name'].downcase
       username = id.to_s if Models::Users[username: username]
-      password = Password.pronounceable
+      password = ::Password.pronounceable
       now      = Time.now
 
       args = args.merge('password' => password,
