@@ -18,9 +18,7 @@ module Firebots
       password = ::Password.pronounceable
       now      = Time.now
 
-      args = args.merge('password' => password,
-                        'username' => username,
-                        'id'       => id)
+      args = args.merge('username' => username, 'id' => id)
 
       send_invite_email(args)
 
