@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'simple-password-gen'
 require 'lib/email'
+require 'lib/user'
 
 module Firebots::InternalAPI::Controllers
 
