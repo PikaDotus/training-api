@@ -42,17 +42,26 @@ module Firebots
       user
     end
 
+    def self.reset_user(user)
+      password = ::Password.pronounceable
+      Firebots::Password.new(user).save_password!(password)
+
+      send_invite_email('email'      => user[:email],
+                        'first_name' => user[:first_name],
+                        'password'   => password)
+    end
+
     def self.send_invite_email(args)
       Firebots::Email.send(
         from: 'admin@mg.fremontrobotics.com',
-        to: args[:email],
+        to: args['email'],
         subject: '3501 FRC Training',
         text: <<-EOM
-          Hello #{args[:first_name]},
+          Hello #{args['first_name']},
 
           You've been added to the FRC 3501 training site: https://app.fremontrobotics.com/about.
 
-          Your temporary password is `#{args[:password]}`. You should change it immediately.
+          Your temporary password is `#{args['password']}`. You should change it immediately.
 
           To get a proper avatar, sign up with your email at https://gravatar.com.
 
