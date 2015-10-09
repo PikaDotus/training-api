@@ -159,7 +159,8 @@ module Firebots
         cached = Cache.get('categories')
         return cached if cached
 
-        categories = Models::Badges.select_map(:category)
+        categories = Models::Badges.where(is_deleted: false)
+                                   .select_map(:category)
         categories = Set.new(categories).to_a
 
         Cache.set('categories', categories, 30)
