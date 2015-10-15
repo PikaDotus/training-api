@@ -18,11 +18,9 @@ module Firebots
       password = ::Password.pronounceable
       now      = Time.now
 
-      args = args.merge('username' => username,
-                        'id'       => id,
-                        'password' => password)
+      args = args.merge('username' => username, 'id' => id)
 
-      send_invite_email(args)
+      send_invite_email(args.merge('password' => password))
 
       Models::Users.insert(args.merge('time_created' => now,
                                       'time_updated' => now,
